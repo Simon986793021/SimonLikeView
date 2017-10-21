@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -132,7 +133,7 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         likeBack.setClickable(false);
         disLikeBack.setClickable(false);
         isClose=false;
-        animationBack.setDuration(500);
+        animationBack.setDuration(1000);
         animationBack.start();
         animationBack.addListener(this);
     }
@@ -146,17 +147,22 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         //初始化文字--点赞
         likeText=new TextView(getContext());
         likeText.setText("喜欢");
+        likeText.setTextSize(25);
         likeText.setTextColor(Color.WHITE);
         likeNumText=new TextView(getContext());
         likeNumText.setText(likeNum+"%");
+        likeNumText.setTextSize(23);
+        likeNumText.setGravity(TEXT_ALIGNMENT_CENTER);
         likeNumText.setTextColor(Color.WHITE);
 
         //初始化文字--无感
         disLikeText=new TextView(getContext());
         disLikeText.setText("无感");
+        disLikeText.setTextSize(25);
         disLikeText.setTextColor(Color.WHITE);
         disLikeNumText=new TextView(getContext());
         disLikeNumText.setText(disLikeNum+"%");
+        disLikeNumText.setTextSize(23);
         disLikeNumText.setTextColor(Color.WHITE);
 
 
@@ -183,18 +189,20 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
 
 
         //点赞总布局
+        LayoutParams textLP=new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textLP.gravity=Gravity.CENTER_HORIZONTAL;
         likeAll =new LinearLayout(getContext());
         likeAll.setOrientation(VERTICAL);
-        likeAll.addView(likeNumText);
-        likeAll.addView(likeText);
+        likeAll.addView(likeNumText,textLP);
+        likeAll.addView(likeText,textLP);
         likeAll.addView(likeBack);
 
 
         //差评总布局
         disLikeAll=new LinearLayout(getContext());
         disLikeAll.setOrientation(VERTICAL);
-        disLikeAll.addView(disLikeNumText);
-        disLikeAll.addView(disLikeText);
+        disLikeAll.addView(disLikeNumText,textLP);
+        disLikeAll.addView(disLikeText,textLP);
         disLikeAll.addView(disLikeBack);
 
 
@@ -202,14 +210,16 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         //中间竖线
         ImageView centerLineImageView=new ImageView(getContext());
         centerLineImageView.setBackground(new ColorDrawable(Color.GRAY));
-        LayoutParams centerLineLP=new LayoutParams(3,80);
-        centerLineLP.setMargins(20, 10, 20, 90);
+        LayoutParams centerLineLP=new LayoutParams(3,160);
+        centerLineLP.setMargins(20, 10, 20, 50);
         centerLineLP.gravity= Gravity.BOTTOM;
 
         //初始化总布局
-        addView(disLikeAll);
+        LayoutParams lp=new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.bottomMargin=50;
+        addView(disLikeAll,lp);
         addView(centerLineImageView,centerLineLP);
-        addView(likeAll);
+        addView(likeAll,lp);
 
 
     }
@@ -257,8 +267,48 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
+                setBackUpAnimation();
             }
         });
+    }
+
+    /**
+     * 背景收回动画
+     */
+    private void setBackUpAnimation() {
+        float disLikePercent=disLikeNum/(disLikeNum+likeNum);
+        float likePercent=(likeNum/(likeNum+disLikeNum));
+        //计算点赞百分比*300
+        final int likeMax=Math.round(likePercent*300);
+        //计算差评百分比*300
+        final int disLikeMax=Math.round(disLikePercent*300);
+
+        int max=Math.max(likeMax,disLikeMax);
+
+        animationBack=ValueAnimator.ofInt(max,0);
+        animationBack.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int margin = (int) animation.getAnimatedValue();
+                if (margin<likeMax)
+                {
+                    LayoutParams lp= (LayoutParams) likeImageView.getLayoutParams();
+                    lp.bottomMargin=margin;
+                    likeImageView.setLayoutParams(lp);
+                }
+                if (margin<disLikeMax)
+                {
+                    LayoutParams lp= (LayoutParams) disLikeImageView.getLayoutParams();
+                    lp.bottomMargin=margin;
+                    disLikeImageView.setLayoutParams(lp);
+                }
+                Log.i(">>>>>>>","margin"+margin);
+                //invalidate();
+            }
+        });
+        animationBack.setDuration(500);
+        animationBack.start();
+
     }
 
     /**
@@ -274,7 +324,7 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-
+                setBackUpAnimation();
             }
         });
     }
