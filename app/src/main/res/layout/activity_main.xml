@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    tools:context="com.wind.simonlikeview.MainActivity">
+    <LinearLayout
+        android:id="@+id/backGround"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@drawable/yellow_background"
+        android:visibility="gone"
+        android:layout_above="@+id/sb_smile"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:id="@+id/iv_smile_face"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/like_1"/>
+    </LinearLayout>
+
+    <SeekBar
+        android:visibility="gone"
+        android:id="@+id/sb_smile"
+        style="@android:style/Widget.Holo.SeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+    <com.wind.simonlikeview.SimonLikeView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.wind.simonlikeview.SimonLikeView>
+</LinearLayout>
