@@ -40,6 +40,7 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
     public SimonLikeView(Context context) {
         super(context);
         init();
+        bindListener();
     }
 
     public SimonLikeView(Context context, @Nullable AttributeSet attrs) {
@@ -60,6 +61,12 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         super(context, attrs, defStyleAttr);
         init();
         bindListener();
+    }
+
+    public void setNum(float likeNum,float disLikeNum)
+    {
+        this.likeNum=likeNum;
+        this.disLikeNum=disLikeNum;
     }
 
     /**
@@ -90,6 +97,7 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
                 disLikeImageView.setImageResource(R.drawable.animation_dislike);
                 animationDislike= (AnimationDrawable) disLikeImageView.getDrawable();
                 animationDislike.start();
+
             }
         });
     }
@@ -118,7 +126,6 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
                 int margin= (int) animation.getAnimatedValue();
                 LayoutParams layoutParams= (LayoutParams) likeImageView.getLayoutParams();
                 layoutParams.bottomMargin=margin;
-
                 if (margin<=likeMax)
                 {
                     likeImageView.setLayoutParams(layoutParams);
@@ -150,9 +157,9 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         likeText.setTextSize(25);
         likeText.setTextColor(Color.WHITE);
         likeNumText=new TextView(getContext());
-        likeNumText.setText(likeNum+"%");
+
         likeNumText.setTextSize(23);
-        likeNumText.setGravity(TEXT_ALIGNMENT_CENTER);
+        likeNumText.setText(likeNum+"%");
         likeNumText.setTextColor(Color.WHITE);
 
         //初始化文字--无感
@@ -161,8 +168,8 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         disLikeText.setTextSize(25);
         disLikeText.setTextColor(Color.WHITE);
         disLikeNumText=new TextView(getContext());
-        disLikeNumText.setText(disLikeNum+"%");
         disLikeNumText.setTextSize(23);
+        disLikeNumText.setText(disLikeNum+"%");
         disLikeNumText.setTextColor(Color.WHITE);
 
 
@@ -184,7 +191,7 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         likeBackLP.gravity=Gravity.BOTTOM;
         likeBack=new LinearLayout(getContext());
         likeBack.addView(likeImageView,likeBackLP);
-        likeBack.setBackgroundResource(R.drawable.yellow_background);
+        likeBack.setBackgroundResource(R.drawable.white_background);
         likeBack.setOrientation(VERTICAL);
 
 
@@ -290,20 +297,22 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 int margin = (int) animation.getAnimatedValue();
+                LayoutParams lp= (LayoutParams) disLikeImageView.getLayoutParams();
+                lp.height= ViewGroup.LayoutParams.WRAP_CONTENT;
+                lp.width= ViewGroup.LayoutParams.WRAP_CONTENT;
+                lp.bottomMargin=margin;
                 if (margin<likeMax)
                 {
-                    LayoutParams lp= (LayoutParams) likeImageView.getLayoutParams();
-                    lp.bottomMargin=margin;
                     likeImageView.setLayoutParams(lp);
                 }
                 if (margin<disLikeMax)
                 {
-                    LayoutParams lp= (LayoutParams) disLikeImageView.getLayoutParams();
-                    lp.bottomMargin=margin;
+
                     disLikeImageView.setLayoutParams(lp);
                 }
                 Log.i(">>>>>>>","margin"+margin);
-                //invalidate();
+
+                invalidate();
             }
         });
         animationBack.setDuration(500);

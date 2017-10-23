@@ -30,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp" />
     <com.wind.simonlikeview.SimonLikeView
+        android:id="@+id/simon_like_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </com.wind.simonlikeview.SimonLikeView>
