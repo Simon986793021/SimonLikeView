@@ -37,10 +37,11 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
     private ValueAnimator animationBack;
     private boolean isClose=false;//判断收起动画
     private int type=0;//选择执行帧动画的笑脸 //0 笑脸 1 哭脸
+    private int defalutSize = dip2px(getContext(), 25);
     public SimonLikeView(Context context) {
         super(context);
-        init();
-        bindListener();
+//        init();
+//        bindListener();
     }
 
     public SimonLikeView(Context context, @Nullable AttributeSet attrs) {
@@ -59,8 +60,8 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
 
     public SimonLikeView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
-        bindListener();
+//        init();
+//        bindListener();
     }
 
     public void setNum(float likeNum,float disLikeNum)
@@ -154,21 +155,21 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         //初始化文字--点赞
         likeText=new TextView(getContext());
         likeText.setText("喜欢");
-        likeText.setTextSize(25);
+        likeText.setTextSize(22);
         likeText.setTextColor(Color.WHITE);
         likeNumText=new TextView(getContext());
 
-        likeNumText.setTextSize(23);
+        likeNumText.setTextSize(20);
         likeNumText.setText(likeNum+"%");
         likeNumText.setTextColor(Color.WHITE);
 
         //初始化文字--无感
         disLikeText=new TextView(getContext());
         disLikeText.setText("无感");
-        disLikeText.setTextSize(25);
+        disLikeText.setTextSize(22);
         disLikeText.setTextColor(Color.WHITE);
         disLikeNumText=new TextView(getContext());
-        disLikeNumText.setTextSize(23);
+        disLikeNumText.setTextSize(20);
         disLikeNumText.setText(disLikeNum+"%");
         disLikeNumText.setTextColor(Color.WHITE);
 
@@ -177,8 +178,8 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         disLikeImageView=new ImageView(getContext());
         disLikeImageView.setImageResource(R.drawable.dislike_1);
         disLikeBack=new LinearLayout(getContext());
-        LayoutParams disLikeBackLP=new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        disLikeBackLP.gravity=Gravity.BOTTOM;
+        LayoutParams disLikeBackLP=new LayoutParams(defalutSize, defalutSize);
+        //disLikeBackLP.gravity=Gravity.BOTTOM;
         disLikeBack.addView(disLikeImageView,disLikeBackLP);
         disLikeBack.setBackgroundResource(R.drawable.white_background);
         disLikeBack.setOrientation(VERTICAL);
@@ -187,8 +188,8 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         //点赞线性布局
         likeImageView=new ImageView(getContext());
         likeImageView.setImageResource(R.drawable.like_1);
-        LayoutParams likeBackLP=new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        likeBackLP.gravity=Gravity.BOTTOM;
+        LayoutParams likeBackLP=new LayoutParams(defalutSize, defalutSize);
+        //likeBackLP.gravity=Gravity.BOTTOM;
         likeBack=new LinearLayout(getContext());
         likeBack.addView(likeImageView,likeBackLP);
         likeBack.setBackgroundResource(R.drawable.white_background);
@@ -198,11 +199,13 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         //点赞总布局
         LayoutParams textLP=new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textLP.gravity=Gravity.CENTER_HORIZONTAL;
+        LayoutParams backLP = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        backLP.gravity = Gravity.CENTER;
         likeAll =new LinearLayout(getContext());
         likeAll.setOrientation(VERTICAL);
         likeAll.addView(likeNumText,textLP);
         likeAll.addView(likeText,textLP);
-        likeAll.addView(likeBack);
+        likeAll.addView(likeBack,backLP);
 
 
         //差评总布局
@@ -210,7 +213,7 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         disLikeAll.setOrientation(VERTICAL);
         disLikeAll.addView(disLikeNumText,textLP);
         disLikeAll.addView(disLikeText,textLP);
-        disLikeAll.addView(disLikeBack);
+        disLikeAll.addView(disLikeBack,backLP);
 
 
 
@@ -224,6 +227,7 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
         //初始化总布局
         LayoutParams lp=new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.bottomMargin=50;
+        lp.gravity=Gravity.BOTTOM;
         addView(disLikeAll,lp);
         addView(centerLineImageView,centerLineLP);
         addView(likeAll,lp);
@@ -266,7 +270,7 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
      * @param disLikeImageView
      */
     private void translationX(ImageView disLikeImageView) {
-        ObjectAnimator objectAnimator=ObjectAnimator.ofFloat(disLikeImageView,"translationX",-10.0f, 0.0f, 10.0f, 0.0f, -10.0f, 0.0f, 10.0f, 0);
+        ObjectAnimator objectAnimator=ObjectAnimator.ofFloat(disLikeImageView,"translationX",-5.0f, 0.0f, 5.0f, 0.0f, -5.0f, 0.0f, 5.0f, 0);
         objectAnimator.setRepeatMode(ValueAnimator.RESTART);
         objectAnimator.setDuration(1500);
         objectAnimator.start();
@@ -298,8 +302,6 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
             public void onAnimationUpdate(ValueAnimator animation) {
                 int margin = (int) animation.getAnimatedValue();
                 LayoutParams lp= (LayoutParams) disLikeImageView.getLayoutParams();
-                lp.height= ViewGroup.LayoutParams.WRAP_CONTENT;
-                lp.width= ViewGroup.LayoutParams.WRAP_CONTENT;
                 lp.bottomMargin=margin;
                 if (margin<likeMax)
                 {
@@ -325,7 +327,7 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
      * @param likeImageView
      */
     private void translationY(ImageView likeImageView) {
-        ObjectAnimator objectAnimator=ObjectAnimator.ofFloat(likeImageView,"translationY",-10.0f, 0.0f, 10.0f, 0.0f, -10.0f, 0.0f, 10.0f, 0);
+        ObjectAnimator objectAnimator=ObjectAnimator.ofFloat(likeImageView,"translationY",-5.0f, 0.0f, 5.0f, 0.0f, -5.0f, 0.0f, 5.0f, 0);
         objectAnimator.setRepeatMode(ValueAnimator.RESTART);
         objectAnimator.setDuration(1500);
         objectAnimator.start();
@@ -346,5 +348,11 @@ public class SimonLikeView extends LinearLayout implements Animator.AnimatorList
     @Override
     public void onAnimationRepeat(Animator animation) {
 
+    }
+
+    //dp转px
+    public static int dip2px(Context context, float dipValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);
     }
 }

@@ -10,6 +10,7 @@ import android.widget.SeekBar;
 public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
     private SeekBar seekBar;
+    private  SimonLikeView simonLikeView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
